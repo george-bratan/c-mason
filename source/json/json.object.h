@@ -102,23 +102,23 @@ namespace json {
 			std::string serialize();
 
 			//
-    		Object & operator [](const int i) { return _value._array[i]; }
-    		Object & operator [](const char* i) { return _value._object[i]; }
+			Object & operator [](const int i) { return _value._array[i]; }
+			Object & operator [](const char* i) { return _value._object[i]; }
 
-    		void operator =(const bool &i ) { _type = Type::Boolean; _value._bool = i; }
-    		void operator =(const int &i ) { _type = Type::Integer; _value._int = i; }
-    		void operator =(const long &i ) { _type = Type::Integer; _value._int = i; }
-    		void operator =(const double &i ) { _type = Type::Float; _value._float = i; }
-    		void operator =(const std::string &i ) { _type = Type::String; _value._string = i; }
+			void operator =(const bool &i ) { _type = Type::Boolean; _value._bool = i; }
+			void operator =(const int &i ) { _type = Type::Integer; _value._int = i; }
+			void operator =(const long &i ) { _type = Type::Integer; _value._int = i; }
+			void operator =(const double &i ) { _type = Type::Float; _value._float = i; }
+			void operator =(const std::string &i ) { _type = Type::String; _value._string = i; }
 
-    		// implicit conversion
-    		operator bool() { _cast(Type::Boolean); return _value._bool; } 
-    		operator int() { _cast(Type::Integer); return _value._int; } 
-    		operator long() { _cast(Type::Integer); return _value._int; } 
-    		operator float() { _cast(Type::Float); return _value._float; } 
-    		operator std::string() { _cast(Type::String); return _value._string; } 
-    		operator std::vector<Object>() { _cast(Type::Array); return _value._array; } 
-    		operator std::map<std::string, Object>() { _cast(Type::Object); return _value._object; } 
+			// implicit conversion
+			operator bool() { _cast(Type::Boolean); return _value._bool; } 
+			operator int() { _cast(Type::Integer); return _value._int; } 
+			operator long() { _cast(Type::Integer); return _value._int; } 
+			operator float() { _cast(Type::Float); return _value._float; } 
+			operator std::string() { _cast(Type::String); return _value._string; } 
+			operator std::vector<Object>() { _cast(Type::Array); return _value._array; } 
+			operator std::map<std::string, Object>() { _cast(Type::Object); return _value._object; } 
 
     		//
 		protected:
