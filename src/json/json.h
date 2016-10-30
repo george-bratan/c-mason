@@ -11,14 +11,21 @@
 #include "json.object.h"
 #include "json.parser.h"
 
+namespace mason {
 namespace json {
 
 	//
-	json::Object parse(const std::string& source)
+	static data::var parse(std::string source)
 	{
-		return json::Parser::parse(source);
+		return parser::parse(source);
 	}
 
+	static std::string serialize(data::var& object)
+	{
+		return parser::serialize(object);
+	}
+
+}
 }
 
 #endif
