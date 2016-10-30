@@ -236,8 +236,8 @@ namespace data {
 			}
 
 			//
-			bool is_ref() const 	{ return _flags & flags::is_xref; 	}
-			bool is_const() const 	{ return _flags & flags::is_xconst; }
+			inline bool is_ref() const 	{ return _flags & flags::is_xref; 	}
+			inline bool is_const() const 	{ return _flags & flags::is_xconst; }
 
 			// broad type checking
 			bool is_null() const 	{ return this->_type->is_null(); 	};
