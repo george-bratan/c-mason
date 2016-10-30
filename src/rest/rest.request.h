@@ -40,7 +40,7 @@ namespace rest {
 				std::map<std::string, std::string> _query;
 				for (auto& i: query) {
 					//
-					_query[ i.first ] = i.second.as<std::string>();
+					_query[ i.first ] = i.second.as_string();
 				}
 
 				curl_easy_setopt(_curl, CURLOPT_URL, (_source + "?" + util::string::url_params(_query)).c_str());
@@ -60,7 +60,7 @@ namespace rest {
 				std::map<std::string, std::string> _payload;
 				for (auto& i: payload) {
 					//
-					_payload[ i.first ] = i.second.as<std::string>();
+					_payload[ i.first ] = i.second.as_string();
 				}
 
 				//curl_easy_setopt(_curl, CURLOPT_POSTFIELDS, util::string::url_params(payload).c_str());
@@ -128,27 +128,6 @@ namespace rest {
 			}
 
 	};
-
-	// request::request(const std::string& source)
-	
-
-	// request::~request()
-	
-
-	// response request::get(data::object query)
-	
-
-	// response request::post(data::object payload)
-	
-
-	// void request::_prepare(response &response)
-	
-
-
-	// size_t request::_write_content(char *buffer, size_t size, size_t nmemb, response *response)
-	
-
-	// size_t request::_write_headers(char *buffer, size_t size, size_t nmemb, response *response)
 	
 }
 }

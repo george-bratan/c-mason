@@ -10,7 +10,6 @@ namespace data {
 
 	typedef std::vector<var> vector;
 	typedef std::map<std::string, var> object;
-	typedef std::map<int, var> map;
 
 	typedef std::function<void(var&, var&)> caster;
 	static std::unordered_map<size_t, std::unordered_map<size_t, caster>> _casters;
@@ -23,11 +22,6 @@ namespace data {
 
 	template<template<typename...> class Ref, typename... Args>
 	struct is_specialization<Ref<Args...>, Ref>: std::true_type {};
-
-	// object::operator std::map<std::string, std::string>()
-	// {
-	// 	return std::map<std::string, std::string>( begin(), end() );
-	// }
 
 	//
 	class var
@@ -60,7 +54,6 @@ namespace data {
 				//if (is_ref() && std::is_const<T>::value) 
 				//	set_const();
 
-
 				// initializer
 				init<non_const>(*this)(const_cast<non_const&>(data));
 			}
@@ -90,7 +83,6 @@ namespace data {
 					}
 				}
 			}
-
 
 			// copy construct
 			var(const var& source): _flags(flags::none), _data(nullptr), _type(nullptr)
@@ -216,26 +208,25 @@ namespace data {
 						return result.as<T>();
 					}
 
-					throw std::domain_error("cast exception");
+					throw std::domain_error("cast exception " + _type->name() + " as " + _as_type->name());
 				}
 			}
 
-			// template <typename T, typename std::enable_if<std::is_constructible<T, std::string>::value, int>::type = 0>
-			// T& as() const
-			// {
-			// 	if (is_null())
-			// 		return "null";
-			// 	if (is_bool())
-			// 		return as<bool>() ? "true" : "false";
-			// 	if (is_int())
-			// 		return std::to_string( as<long>() );
-			// 	if (is_float())
-			// 		return std::to_string( as<double>() );
-			// 	if (is_string())
-			// 		return as<std::string>();
+			std::string as_string() const
+			{
+				if (is_null())
+					return "null";
+				if (is_bool())
+					return as<bool>() ? "true" : "false";
+				if (is_int())
+					return std::to_string( as<long>() );
+				if (is_float())
+					return std::to_string( as<double>() );
+				if (is_string())
+					return as<std::string>();
 
-			// 	return "";
-			// }
+				return "";
+			}
 
 			template <typename T>
 			bool is() const
@@ -248,6 +239,7 @@ namespace data {
 			bool is_ref() const 	{ return _flags & flags::is_xref; 	}
 			bool is_const() const 	{ return _flags & flags::is_xconst; }
 
+			// broad type checking
 			bool is_null() const 	{ return this->_type->is_null(); 	};
 			bool is_bool() const 	{ return this->_type->is_bool(); 	};
 			bool is_int() const 	{ return this->_type->is_int(); 	};
@@ -256,6 +248,7 @@ namespace data {
 			bool is_vector() const 	{ return this->_type->is_vector(); 	};
 			bool is_object() const 	{ return this->_type->is_object(); 	};
 
+			// get type name
 			std::string name() const { return this->_type->name(); 	};
 
 			// copy assignment
@@ -403,6 +396,7 @@ namespace data {
 		    	return operator == ( std::string(value) );
 		    }
 
+		    // shortcut
 		    int size() const
 		    {
 		    	if (is<vector>())
@@ -417,6 +411,7 @@ namespace data {
 		    	return 1;
 		    }
 
+		    // shortcut method
 		    void push_back(const var& value)
 		    {
 		    	bool is_object = value.is_vector() && value.size() == 2 && value.at(0).is_string();
@@ -427,8 +422,10 @@ namespace data {
 		        if (is_null()) 
 		            *this = vector();
 
-		    	if (is<vector>())
+		    	if (is<vector>()) {
+		    		//
 		    		as<vector>().push_back(value);
+		    	}
 
 		    	if (is<object>() && is_object) {
 		    		// force copy constructor with const cast
@@ -470,24 +467,17 @@ namespace data {
 			void * _ptr() const
 			{
 				if (is_ref() || _type->size() > sizeof(_data)) {
-					// _data holds pointer to allocated memory
+					// _data holds pointer to value
 					return _data;
 				}
 
 				// _data holds value
 				return const_cast<void**>(&_data);
-				//return reinterpret_cast<void*>(&_data);
-
-
-				//
-				//void * non_const = const_cast<void*>(_data);
-				//void * _ptr = &non_const;
 			}
 
 		private:
 			int _flags;
 			void * _data;
-			//const type * _type;
 
 		private:
 			template <typename T>
@@ -699,26 +689,6 @@ namespace data {
 				add_caster<std::string, char *>([](var& source, var& dest) {
 					//
 					dest = const_cast<char *>( source.as<std::string>().c_str() );
-				});
-
-				add_caster<std::nullptr_t, std::string>([](var& source, var& dest) {
-					//
-					dest = "null";
-				});
-
-				add_caster<bool, std::string>([](var& source, var& dest) {
-					//
-					dest = source.as<bool>() ? "true" : "false";
-				});
-
-				add_caster<int, std::string>([](var& source, var& dest) {
-					//
-					dest = std::to_string( source.as<long>() );
-				});
-
-				add_caster<float, std::string>([](var& source, var& dest) {
-					//
-					dest = std::to_string( source.as<double>() );
 				});
 
 				return nullptr;

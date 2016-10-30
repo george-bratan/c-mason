@@ -6,8 +6,6 @@
 namespace mason {
 namespace data {
 
-	//template<typename F, typename... Ts>
-
 	//
 	template <typename M>
 	class model
@@ -20,7 +18,6 @@ namespace data {
 
 			model(data::object values): model() {
 				//
-				//for (auto i = v.as<data::object>().begin(); i != v.as<data::object>().end(); ++i) {
 				for (auto& i: values) {
 					//
 					if (_fields.count(i.first) > 0) {
@@ -29,6 +26,7 @@ namespace data {
 				}
 			}
 
+			// construct with reference
 			// model(M* m): _model(&m), _is_ref(true) {
 			// 	//
 			// 	_model->sync( *this );
@@ -56,16 +54,6 @@ namespace data {
 			operator object() {
 				//
 				return _fields;
-				//return std::map<std::string, data::var>(_fields.begin(), _fields.end());
-
-				// var result = object();
-
-				// for (auto& i: _fields) {
-				// 	//
-				// 	result[i.first] = _fields[i.first];
-				// }
-
-				// return result;
 			}
 
 			var& get(const std::string& key) {

@@ -22,27 +22,6 @@ namespace data {
 				delete _statement;
 			}
 
-			prepare& bind(data::map& params)
-			{
-				for (auto& param: params) {
-					_index++;
-
-					if (param.second.is_int()) 
-						_statement->setInt(param.first, param.second.as<int>());
-
-					if (param.second.is_bool())
-						_statement->setBoolean(param.first, param.second.as<bool>());
-
-					if (param.second.is_float()) 
-						_statement->setDouble(param.first, param.second.as<double>());
-
-					if (param.second.is_string()) 
-						_statement->setString(param.first, param.second.as<std::string>());
-				}
-
-				return *this;
-			}
-
 			prepare& bind(data::vector& params)
 			{
 				for (auto& param: params) {

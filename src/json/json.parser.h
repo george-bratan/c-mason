@@ -209,17 +209,6 @@ namespace json {
 				return pieces;
 			}
 	};
-
-	
-	//std::vector<std::string> parser::_split(const std::string& source, char delimiter) 
-	
-
-	
-	//data::var parser::parse(std::string& source) 
-	
-
-	//std::string parser::serialize(data::var& object)
-	
 	
 }
 }

@@ -17,6 +17,8 @@ namespace data {
 				// get meta data
 				auto meta = result->getMetaData();
 
+				//getColumnTypeName
+
 				// pull values
 				for (auto i = 1; i < meta->getColumnCount() + 1; i++) {
 					//
@@ -24,20 +26,48 @@ namespace data {
 						//
 						_values[ meta->getColumnLabel(i) ] = data::null;
 					}
-					else if (meta->isNumeric(i)) {
-						//
-						_values[ meta->getColumnLabel(i) ] = (long) result->getInt(i);
-					}
 					else {
 						//
-						_values[ meta->getColumnLabel(i) ] = (std::string) result->getString(i);
+						switch (meta->getColumnType(i)) {
+							case sql::DataType::INTEGER:
+							case sql::DataType::DECIMAL:
+							case sql::DataType::TINYINT:
+							case sql::DataType::SMALLINT:
+							case sql::DataType::MEDIUMINT:
+							case sql::DataType::BIGINT:
+								_values[ meta->getColumnLabel(i) ] = (long) result->getInt(i);
+								break;
+
+							case sql::DataType::REAL:
+							case sql::DataType::DOUBLE:
+							case sql::DataType::NUMERIC:
+								_values[ meta->getColumnLabel(i) ] = (double) result->getDouble(i);
+								break;
+
+							case sql::DataType::CHAR:
+							case sql::DataType::VARCHAR:
+							case sql::DataType::LONGVARCHAR:
+								_values[ meta->getColumnLabel(i) ] = (std::string) result->getString(i);
+								break;
+
+							case sql::DataType::BIT:
+							case sql::DataType::SET:
+							case sql::DataType::ENUM:
+							case sql::DataType::TIME:
+							case sql::DataType::DATE:
+							case sql::DataType::TIMESTAMP:
+							case sql::DataType::BINARY:
+							case sql::DataType::VARBINARY:
+							case sql::DataType::LONGVARBINARY:
+							default:
+								_values[ meta->getColumnLabel(i) ] = (std::string) result->getString(i);
+								break;
+						}
 					}
 				}
 			}
 
 			//
-			//data::var & operator [](const char* i) { return _values[i]; }
-			//data::var & operator [](const std::string &i) { return _values[i]; }
 			data::var& get(const std::string& index) { return _values[index]; }
 
 			// implicit conversion
